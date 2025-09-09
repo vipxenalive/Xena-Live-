@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>وكالة شحن - Xena Live</title>
+  <style>
+    body {
+      margin:0;
+      font-family: "Tahoma", sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: #fff;
+    }
+    .container {
+      background: rgba(0,0,0,0.5);
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+      width: 100%;
+      max-width: 400px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #f1c40f;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-size: 14px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(45deg, #f39c12, #e67e22);
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: linear-gradient(45deg, #e67e22, #d35400);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>وكالة شحن Xena Live</h2>
+    <form onsubmit="return false;">
+      <label>اسم الوكيل:</label>
+      <input type="text" placeholder="أدخل اسم الوكيل" required>
+      
+      <label>معرف الوكيل:</label>
+      <input type="text" placeholder="أدخل المعرف" required>
+      
+      <label>هل لديك وكالة مضيفين؟</label>
+      <select required>
+        <option value="">اختر</option>
+        <option value="yes">نعم</option>
+        <option value="no">لا</option>
+      </select>
+      
+      <label>رقم الهاتف:</label>
+      <input type="tel" placeholder="+964 7XXXXXXXXX" required>
+      
+      <button type="button" onclick="alert('يرجى شحن البطاقة 1000 دولار للاستكمال وفتح الوكالة')">
+        إضافة التأمين
+      </button>
+    </form>
+  </div>
+</body>
+</html>
